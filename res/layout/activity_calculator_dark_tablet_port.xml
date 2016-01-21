@@ -15,7 +15,24 @@
   limitations under the License.
   -->
 
-<resources>
-    <item name="activity_calculator" type="layout">@layout/activity_calculator_land</item>
-    <item name="activity_calculator_dark" type="layout">@layout/activity_calculator_dark_land</item>
-</resources>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/display_dark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <include layout="@layout/pad_advanced_dark" />
+
+    <LinearLayout style="@style/PadLinearLayoutStyle">
+
+        <include layout="@layout/pad_numeric_dark" />
+        <include layout="@layout/pad_operator_two_col_dark" />
+
+    </LinearLayout>
+
+</LinearLayout>

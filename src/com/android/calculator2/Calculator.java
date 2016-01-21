@@ -25,6 +25,8 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
+import android.app.UiModeManager;
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -115,13 +117,17 @@ public class Calculator extends Activity
     private View mDeleteButton;
     private View mClearButton;
     private View mEqualButton;
-
+    private boolean isNightMode=false;
     private Animator mCurrentAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calculator);
+
+        UiModeManager uiManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
+        isNightMode = uiManager.getNightMode() == UiModeManager.MODE_NIGHT_YES;
+
+        setContentView((isNightMode) ? R.layout.activity_calculator_dark:R.layout.activity_calculator);
 
         mDisplayView = findViewById(R.id.display);
         mFormulaEditText = (CalculatorEditText) findViewById(R.id.formula);
@@ -180,17 +186,17 @@ public class Calculator extends Activity
             }
 
             if (state == CalculatorState.ERROR) {
-                final int errorColor = getResources().getColor(R.color.calculator_error_color);
+                final int errorColor = getResources().getColor((isNightMode) ? R.color.calculator_error_color_dark:R.color.calculator_error_color);
                 mFormulaEditText.setTextColor(errorColor);
                 mResultEditText.setTextColor(errorColor);
                 getWindow().setStatusBarColor(errorColor);
             } else {
                 mFormulaEditText.setTextColor(
-                        getResources().getColor(R.color.display_formula_text_color));
+                        getResources().getColor((isNightMode) ? R.color.display_formula_text_color_dark:R.color.display_formula_text_color));
                 mResultEditText.setTextColor(
-                        getResources().getColor(R.color.display_result_text_color));
+                        getResources().getColor((isNightMode) ? R.color.display_result_text_color_dark:R.color.display_result_text_color));
                 getWindow().setStatusBarColor(
-                        getResources().getColor(R.color.calculator_accent_color));
+                        getResources().getColor((isNightMode) ? R.color.calculator_accent_color_dark:R.color.calculator_accent_color));
             }
         }
     }
@@ -371,7 +377,7 @@ public class Calculator extends Activity
 
         final View sourceView = mClearButton.getVisibility() == View.VISIBLE
                 ? mClearButton : mDeleteButton;
-        reveal(sourceView, R.color.calculator_accent_color, new AnimatorListenerAdapter() {
+        reveal(sourceView, (isNightMode) ? R.color.calculator_accent_color_dark:R.color.calculator_accent_color, new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 mFormulaEditText.getEditableText().clear();
@@ -386,7 +392,7 @@ public class Calculator extends Activity
             return;
         }
 
-        reveal(mEqualButton, R.color.calculator_error_color, new AnimatorListenerAdapter() {
+        reveal(mEqualButton, (isNightMode) ? R.color.calculator_error_color_dark:R.color.calculator_error_color, new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 setState(CalculatorState.ERROR);
